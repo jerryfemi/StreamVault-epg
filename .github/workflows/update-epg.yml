@@ -10,49 +10,31 @@ jobs:
   grab-epg:
     runs-on: ubuntu-latest
     steps:
-      # 1. Check out your repository (to get my-channels.xml)
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-
-      # 2. Setup Node.js environment
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-
-      # 3. Clone the iptv-org scraper into a subfolder
-      - name: Clone IPTV-ORG Grabber
-        run: git clone --depth 1 -b master https://github.com/iptv-org/epg.git grabber
-
-      # 4. Install dependencies for the grabber
-      - name: Install dependencies
-        working-directory: ./grabber
-        run: npm install
-
-      # 5. Run the grabber using YOUR my-channels.xml file. Outputs to guide.xml.gz
-      - name: Grab EPG
-        working-directory: ./grabber
-        run: npm run grab --- --channels=../my-channels.xml --gzip --output=../guide.xml.gz
-
-      # 6. Upload the generated guide.xml.gz as a workflow artifact
+      # 1. Download the massive master EPG file from epg.pw directly
+      - name: Download Global EPG
+        run: |
+          wget --header="User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)" https://epg.pw/xmltv/epg_EN.xml.gz -O guide.xml.gz
+          
+      # 2. Save the downloaded file as a temporary artifact
       - name: Upload EPG Artifact
         uses: actions/upload-artifact@v4
         with:
           name: epg-guide
           path: guide.xml.gz
 
-  # This job takes the generated guide and publishes it to GitHub Pages
   publish-epg:
     needs: grab-epg
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
+      # 3. Download the artifact from the previous step
       - name: Download EPG Artifact
         uses: actions/download-artifact@v4
         with:
           name: epg-guide
 
+      # 4. Push it directly to your permanent GitHub Pages branch
       - name: Push to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -60,4 +42,4 @@ jobs:
           publish_dir: ./
           publish_branch: gh-pages
           force_orphan: true
-          commit_message: "Automated EPG Update"
+          commit_message: "Automated Global EPG Update"
