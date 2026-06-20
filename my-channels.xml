@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<channels>
+  <!-- USA Sports Channels -->
+  <channel site="tvguide.com" lang="en" xmltv_id="FoxSports1.us@HD" site_id="20455">Fox Sports 1</channel>
+  <channel site="tvguide.com" lang="en" xmltv_id="beINSportsUSA.us@SD" site_id="59461">beIN Sports</channel>
+  <channel site="tvguide.com" lang="en" xmltv_id="ESPN.us" site_id="22096">ESPN</channel>
+  
+  <!-- UK Sports Channels -->
+  <channel site="tvguide.co.uk" lang="en" xmltv_id="SkySportsMainEvent.uk" site_id="404">Sky Sports Main Event</channel>
+  <channel site="tvguide.co.uk" lang="en" xmltv_id="TNTSports1.uk" site_id="421">TNT Sports 1</channel>
+
+  <!-- Add as many as you need below! You find site_ids on the iptv-org/epg docs -->
+</channels>
