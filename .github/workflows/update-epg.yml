@@ -2,51 +2,32 @@ name: Update EPG
 
 on:
   schedule:
-    # Runs every day at 02:00 AM UTC automatically
+    # Runs every day at 02:00 AM UTC
     - cron: '0 2 * * *'
-  workflow_dispatch: # Allows you to run it manually from the Actions tab
+  workflow_dispatch: 
 
 jobs:
   grab-epg:
     runs-on: ubuntu-latest
     steps:
-      # 1. Try multiple EPG sources with fallback
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
       - name: Download Global EPG
         run: |
-          echo "=== Attempting EPG download ==="
+          echo "=== Downloading Massive Raw EPG ==="
+          wget -q --timeout=60 "https://iptv-org.github.io/epg/guides/en.xml.gz" -O guide_raw.xml.gz 2>/dev/null || \
+          wget -q --timeout=60 --header="User-Agent: Mozilla/5.0" "https://epg.pw/xmltv/epg.xml.gz" -O guide_raw.xml.gz
           
-          # Source 1: iptv-org GitHub-hosted guides (most reliable, no Cloudflare)
-          echo "Trying iptv-org guides..."
-          wget -q --timeout=60 "https://iptv-org.github.io/epg/guides/en.xml.gz" -O guide.xml.gz 2>/dev/null && echo "SUCCESS: iptv-org" && exit 0
-          
-          # Source 2: epg.pw global file (correct filename: epg.xml.gz, NOT epg_EN.xml.gz)
-          echo "Trying epg.pw global..."
-          wget -q --timeout=60 --header="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" "https://epg.pw/xmltv/epg.xml.gz" -O guide.xml.gz 2>/dev/null && echo "SUCCESS: epg.pw global" && exit 0
-          
-          # Source 3: epg.pw US-specific
-          echo "Trying epg.pw US..."
-          wget -q --timeout=60 --header="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" "https://epg.pw/xmltv/epg_US.xml.gz" -O guide.xml.gz 2>/dev/null && echo "SUCCESS: epg.pw US" && exit 0
-          
-          # Source 4: epg.pw UK-specific
-          echo "Trying epg.pw GB..."
-          wget -q --timeout=60 --header="User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:120.0) Gecko/20100101 Firefox/120.0" "https://epg.pw/xmltv/epg_GB.xml.gz" -O guide.xml.gz 2>/dev/null && echo "SUCCESS: epg.pw GB" && exit 0
-          
-          echo "ERROR: All EPG sources failed!"
-          exit 1
-          
-      # 2. Verify the file is valid (not empty or an error page)
-      - name: Verify EPG File
-        run: |
-          FILE_SIZE=$(stat -c%s guide.xml.gz)
-          echo "Downloaded file size: ${FILE_SIZE} bytes"
-          if [ "$FILE_SIZE" -lt 1000 ]; then
-            echo "ERROR: File too small (${FILE_SIZE} bytes), likely not a valid EPG"
-            exit 1
-          fi
-          echo "File looks valid!"
+      - name: Run Python Optimizer
+        run: python filter_epg.py
 
-      # 3. Save the downloaded file as a temporary artifact
-      - name: Upload EPG Artifact
+      - name: Upload Lean Artifact
         uses: actions/upload-artifact@v4
         with:
           name: epg-guide
@@ -58,13 +39,11 @@ jobs:
     permissions:
       contents: write
     steps:
-      # 4. Download the artifact from the previous step
-      - name: Download EPG Artifact
+      - name: Download Artifact
         uses: actions/download-artifact@v4
         with:
           name: epg-guide
 
-      # 5. Push it directly to your permanent GitHub Pages branch
       - name: Push to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -72,4 +51,4 @@ jobs:
           publish_dir: ./
           publish_branch: gh-pages
           force_orphan: true
-          commit_message: "Automated Global EPG Update"
+          commit_message: "Automated Lean EPG Update"
