@@ -1,0 +1,63 @@
+name: Update EPG
+
+on:
+  schedule:
+    # Runs every day at 02:00 AM UTC automatically
+    - cron: '0 2 * * *'
+  workflow_dispatch: # Allows you to run it manually from the Actions tab
+
+jobs:
+  grab-epg:
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Check out your repository (to get my-channels.xml)
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      # 3. Clone the iptv-org scraper into a subfolder
+      - name: Clone IPTV-ORG Grabber
+        run: git clone --depth 1 -b master https://github.com/iptv-org/epg.git grabber
+
+      # 4. Install dependencies for the grabber
+      - name: Install dependencies
+        working-directory: ./grabber
+        run: npm install
+
+      # 5. Run the grabber using YOUR my-channels.xml file. Outputs to guide.xml.gz
+      - name: Grab EPG
+        working-directory: ./grabber
+        run: npm run grab --- --channels=../my-channels.xml --gzip --output=../guide.xml.gz
+
+      # 6. Upload the generated guide.xml.gz as a workflow artifact
+      - name: Upload EPG Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: epg-guide
+          path: guide.xml.gz
+
+  # This job takes the generated guide and publishes it to GitHub Pages
+  publish-epg:
+    needs: grab-epg
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download EPG Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: epg-guide
+
+      - name: Push to gh-pages branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
+          publish_branch: gh-pages
+          force_orphan: true
+          commit_message: "Automated EPG Update"
