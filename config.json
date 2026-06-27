@@ -1,24 +1,12 @@
 {
   "dead_channels": [
-    "AXNAsia.sg@Indonesia",
-    "AXNPoland.pl@SD",
-    "AXNWhite.pl@SD",
-    "Adjarasport1.ge@SD",
-    "AfghanNobelMovies.ca@SD",
-    "AfriwoodBlockbuster.za@SD",
-    "AlfaSport.cy@SD",
-    "AlkassFive.qa@SD",
-    "AlkassSeven.qa@SD",
-    "AndTV.in@HD",
-    "AndTV.in@International",
-    "Andflix.in@HD",
-    "Andpictures.in@HD",
-    "Andpictures.in@SD",
-    "AndxplorHD.in@HD",
-    "DDSports.in@SD",
-    "Movies.us@SD",
-    "PolsatSportExtra1.pl@SD",
-    "Twentyseven.it@SD"
+    "AntenaSport.ro@SD",
+    "AsianetMovies.in@HD",
+    "Atrescine.es@SD",
+    "AwapaSportsTV.sv@SD",
+    "B4UKadak.in@SD",
+    "B4UMovies.in@India",
+    "B4UMovies.in@USA"
   ],
   "top_channels": [
     "AMC.us@EastHD",
