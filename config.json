@@ -1,5 +1,6 @@
 {
   "dead_channels": [
+    "AMC.us@EastHD",
     "Adjarasport1.ge@SD",
     "AlfaSport.cy@SD",
     "AlkassFive.qa@SD",
@@ -20,6 +21,7 @@
     "CanalPlusSport.fr@SD",
     "CanaldoInter.br@SD",
     "Combate.br@SD",
+    "DDSports.in@SD",
     "DSportsUruguay.uy@SD",
     "DeportesTVC.hn@SD",
     "DirecTVSports.us@Panregional",
@@ -28,6 +30,7 @@
     "ESPNDeportes.us@SD",
     "ElHeddafTV.dz@SD",
     "F1Channel.ie@US",
+    "FBTV.tr@SD",
     "FTV.bo@SD",
     "FUELTV.pt@SD",
     "FanDuelRacing.us@SD",
@@ -39,7 +42,11 @@
     "GEMSport.tr@SD",
     "GolfChannelLatinAmerica.us@SD",
     "HTVSports.vn@SD",
-    "Movies.us@SD"
+    "IRIB3.ir@SD",
+    "Movies.us@SD",
+    "RomedyNow.in@SD",
+    "Sport.sk@SD",
+    "iFilmEnglish.ir@SD"
   ],
   "top_channels": [
     "AMC.us@EastHD",
