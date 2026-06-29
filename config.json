@@ -32,6 +32,7 @@
     "CBSSportsGolazoNetwork.us@SD",
     "CBSSportsHQ.us@SD",
     "CDNDeportes.do@SD",
+    "CanalPlusFoot.fr@SD",
     "CanalPlusSport.fr@SD",
     "CanaldoInter.br@SD",
     "GolClassics.es@SD",
@@ -53,5 +54,13 @@
     "GolClassics.es@SD",
     "Sport.sk@SD",
     "TigoSports.gt@SD"
-  ]
+  ],
+  "custom_epg": {
+    "TigoSports.gt@SD": {
+      "title": "Germany V Paraguay",
+      "start": "2026-06-29T20:30:00.000Z",
+      "end": "2026-06-29T22:20:00.000Z",
+      "description": "FIFA World Cup"
+    }
+  }
 }
